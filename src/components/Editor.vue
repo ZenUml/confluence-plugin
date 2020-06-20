@@ -74,23 +74,6 @@
 
           this.$store.dispatch('updateCode', {code: newCode});
         }
-      },
-      addParticipant() {
-        let code = this.$store.state.code;
-        let lines = code.split('\n');
-        let buffer = '', added = false;
-        lines.forEach(line => {
-          if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
-            buffer = `${buffer}\nNewParticipant`;
-            added = true;
-          }
-          buffer = `${buffer}\n${line}`;
-        });
-        if(!added) {
-          buffer = `${code}\nNewParticipant`;
-        }
-        this.$store.dispatch('updateCode', {code: buffer});
-        this.codemirror.execCommand('goDocStart');
       }
     },
     computed: {
