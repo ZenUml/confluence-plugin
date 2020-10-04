@@ -1,162 +1,50 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Grapheditor viewer</title>
+	<title>Grapheditor viewer</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114996686-1"></script>
-  <script type="text/javascript" src="../js/google-analytics.js"></script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-114996686-1"></script>
+	<script type="text/javascript" src="../js/google-analytics.js"></script>
 
 	<script type="text/javascript" src="../js/util.js"></script>
 
-	<script type="text/javascript">
-		var STENCIL_PATH = 'stencils';
-		var IMAGE_PATH = 'images';
-		var STYLE_PATH = 'styles';
-
-		var urlParams = (function(url)
-		{
-			var result = new Object();
-			var idx = url.lastIndexOf('?');
-
-			if (idx > 0)
-			{
-				var params = url.substring(idx + 1).split('&');
-
-				for (var i = 0; i < params.length; i++)
-				{
-					idx = params[i].indexOf('=');
-
-					if (idx > 0)
-					{
-						result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
-					}
-				}
-			}
-
-			return result;
-		})(window.location.href);
-
-		// Sets the base path, the UI language via URL param and configures the
-		// supported languages to avoid 404s. The loading of all core language
-		// resources is disabled as all required resources are in grapheditor.
-		// properties. Note that in this example the loading of two resource
-		// files (the special bundle and the default bundle) is disabled to
-		// save a GET request. This requires that all resources be present in
-		// each properties file since only one file is loaded.
-		var mxLoadResources = false;
-		var mxBasePath = 'src';
-	</script>
+	<script type="text/javascript" src="js/viewer/env.js"></script>
 	<script type="text/javascript" src="sanitizer/sanitizer.min.js"></script>
 	<script type="text/javascript" src="src/js/mxClient.js"></script>
 	<script type="text/javascript" src="js/Graph.js"></script>
 	<script type="text/javascript" src="js/Shapes.js"></script>
+	<script type="text/javascript" src="js/viewer/macro.js"></script>
+
+	<link rel="stylesheet" href="styles/viewer.css">
 </head>
+
 <body class="geEditor">
-	<!-- Input:
-	<br />
-	<textarea rows="24" cols="100" id="textarea" placeholder="mxGraphModel"></textarea>
-	<br />
-	<button onclick="show(document.getElementById('textarea').value);return false;">Show</button> -->
 	<div id="graph"></div>
+	<button id="commentBtn">Add Comment</button>
+
+	<script type="text/javascript" src="js/viewer/graph.js"></script>
+
 	<script type="text/javascript">
-		var graph = new Graph(document.getElementById('graph'));
-		graph.resizeContainer = false;
-		graph.setEnabled(true);
-		graph.setCellsEditable(false);
-		graph.setCellsMovable(false);
-		graph.setCellsResizable(false);
-		graph.setCellsBendable(false);
-		graph.setCellsSelectable(false);
-		graph.setDropEnabled(false);
-		graph.setSplitEnabled(false);
-		graph.setConnectable(false);
-
-		var img = new mxImage('/drawio/images/comment.svg', 20, 20);
-
-		graph.addListener(mxEvent.CLICK, function(sender, evt) {
-			console.log(evt)
-			var e = evt.getProperty('event'); // mouse event
-			var cell = evt.getProperty('cell'); // cell may be null
-
-			if (cell != null)
-			{
-				// Do something useful with cell and consume the event
-				console.log('cell', cell);
-
-				var overlay = new mxCellOverlay(img, 'This is a comment', mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
-				overlay.defaultOverlap = 0.7;
-				graph.addCellOverlay(cell, overlay);
-				overlay.addListener(mxEvent.CLICK, function(sender, evt) {
-					var cell = evt.getProperty('cell');
-					graph.setSelectionCell(cell);
-				});
-
-				evt.consume();
-			}
-		});
-
-		graph.popupMenuHandler.factoryMethod = function(menu, cell, evt) {
-			console.log(menu, cell, evt)
-			if(cell.edge){
-				menu.addItem('First edge option', null, function()
-				{ 
-					alert('This is the first option of edge ');
-				})
-				menu.addItem('Second edge option', null, function()
-				{
-					alert('This is the second option of edge ');
-				})
-			}
-			if(cell.vertex){
-				menu.addItem('First vertex option', null, function()
-				{
-					alert('This is the first option of vertex ');
-				})
-				menu.addItem('Second vertex option', null, function()
-				{
-					alert('This is the second option of vertex ');
-				})
-			}
+		if (window !== window.top) {
+			loadConnect(initializeMacro);
+		} else {
+			setGraphXml(`<mxGraphModel dx="1135" dy="370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="80" y="30" width="120" height="60" as="geometry"/></mxCell><mxCell id="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="3" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1"><mxGeometry x="360" y="20" width="80" height="80" as="geometry"/></mxCell></root></mxGraphModel>`);
 		}
-
-		function setGraphStyle(styleUrl)
-		{
-			var req = mxUtils.load(styleUrl);
-			var root = req.getDocumentElement();
-			var dec = new mxCodec(root.ownerDocument);
-			dec.decode(root, graph.stylesheet);
-		};
-
-		function setGraphXml(data)
-		{
-			var xmlDoc = mxUtils.parseXml(data);
-			var codec = new mxCodec(xmlDoc);
-			codec.decode(xmlDoc.documentElement, graph.getModel());
-		};
-
-		setGraphXml(`<mxGraphModel dx="1135" dy="370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="80" y="30" width="120" height="60" as="geometry"/></mxCell><mxCell id="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="3" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1"><mxGeometry x="360" y="20" width="80" height="80" as="geometry"/></mxCell></root></mxGraphModel>`);
-
-		async function initializeMacro() {
-			const macro = new Macro(AP.confluence, 'graph');
-			const {graphXml} = await macro.load();
-
-			if(graphXml) {
-				setGraphStyle('styles/default.xml');
-				setGraphXml(graphXml);
-			}
-
-			setTimeout(function () {
-				let width = document.body.scrollWidth;
-				let height = document.body.scrollHeight;
-				console.log('Resize to ', width, height);
-				AP.resize(width, height);
-			}, 1000);
-		}
-
-		// loadConnect(initializeMacro);
 	</script>
+
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<p id="modalText"></p>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/viewer/modal.js"></script>
+
 </body>
+
 </html>
