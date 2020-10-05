@@ -13,10 +13,10 @@ module.exports = {
   devServer: {
     compress: true,  // This reduces the app.js from 4.8MB to 1.2MB
     before: function (app) {
-      app.get(/installed/, function (req, res) {
+      app.post(/installed/, function (req, res) {
         res.status(200).send(`OK`);
       })
-      app.get(/uninstalled/, function (req, res) {
+      app.post(/uninstalled/, function (req, res) {
         res.status(200).send(`OK`);
       })
     }
@@ -37,7 +37,7 @@ module.exports = {
         template: './public/edit.html',
         inject: true,
         product_type: productType
-      }])    
+      }])
     config
       .plugin('drawio-viewer-html')
       .use(HtmlWebpackPlugin, [{

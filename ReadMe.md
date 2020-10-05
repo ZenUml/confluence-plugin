@@ -10,7 +10,7 @@ Open local pages at:
 `latest` is used.
 
 # Release
-The release is done through 
+The release is done through Gitlab.
 
 # Design decisions
 

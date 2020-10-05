@@ -33,7 +33,7 @@ function addComment(e) {
     deactivateCommentMode();
 }
 
-function showComment() {
+async function showComment() {
     const comment = currentText.value;
     overlay = new mxCellOverlay(img, comment, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
     overlay.defaultOverlap = 0.7;
@@ -42,6 +42,33 @@ function showComment() {
         console.log(evt);
         showModal(comment);
     });
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const pageId = urlParams.get('pageId');
+
+    let commentRequestBody = {
+      "type": "comment",
+      "space": {
+        "key": "ZEN"
+      },
+      "body": {
+        "storage": {
+          "representation": "storage",
+          "value": "A <ac:link>  <ri:user ri:userkey=\"557058:0a2e245b-f5cd-42f7-bf07-a53b8d17e94f\"/></ac:link> B"
+        }
+      },
+      "title": "Test comment",
+      "container": {
+        "id": pageId,
+        "type" : "global"
+      }
+    }
+
+    await AP.request('/rest/api/content', {
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(commentRequestBody)
+    })
 
     if (subject) {
         graph.removeCells([currentText]);
