@@ -54,7 +54,7 @@ async function showComment() {
       "body": {
         "storage": {
           "representation": "storage",
-          "value": "A <ac:link>  <ri:user ri:userkey=\"557058:0a2e245b-f5cd-42f7-bf07-a53b8d17e94f\"/></ac:link> B"
+          "value": comment
         }
       },
       "title": "Test comment",
