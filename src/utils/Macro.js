@@ -17,6 +17,7 @@ OrderController.create(payload) {
     OrderRepo.save()
   }
 }`
+  EXAMPLE_GRAPHXML = `<mxGraphModel dx="1135" dy="370" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="80" y="30" width="120" height="60" as="geometry"/></mxCell><mxCell id="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="3" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1"><mxGeometry x="360" y="20" width="80" height="80" as="geometry"/></mxCell></root></mxGraphModel>`;
   _confluence;
   _key;
   _versionNumber;
@@ -129,6 +130,10 @@ OrderController.create(payload) {
       code = this.EXAMPLE;
     }
 
+    if(this._macroIdentifier === 'graph' && !graphXml) {
+      graphXml = this.EXAMPLE_GRAPHXML;
+    }
+
     styles = styles || {}
     return {code, styles, mermaidCode, diagramType, graphXml};
   }
@@ -153,7 +158,7 @@ OrderController.create(payload) {
       }
     }
     await this.setContentProperty(contentProperty)
-  }  
+  }
 }
 
 export default Macro

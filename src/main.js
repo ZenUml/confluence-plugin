@@ -108,7 +108,8 @@ if (window.location.href.includes('localhost')) {
   // eslint-disable-next-line
   console.log('You are using a mocked AP.confluence')
   window.AP = {
-    confluence: new MockApConfluence()
+    confluence: new MockApConfluence(),
+    resize: () => {}
   }
 }
 
