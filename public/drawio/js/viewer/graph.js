@@ -46,28 +46,11 @@ async function showComment() {
   const urlParams = new URLSearchParams(window.location.search);
   const pageId = urlParams.get('pageId');
 
-  let commentRequestBody = {
-    'type': 'comment',
-    'space': {
-      'key': 'ZEN'
-    },
-    'body': {
-      'storage': {
-        'representation': 'storage',
-        'value': comment
-      }
-    },
-    'title': 'Test comment',
-    'container': {
-      'id': pageId,
-      'type': 'global'
-    }
-  }
-
+  const commentEntity = new Comment('ZEN', pageId, comment)
   const response = await AP.request('/rest/api/content', {
     type: 'POST',
     contentType: 'application/json',
-    data: JSON.stringify(commentRequestBody)
+    data: commentEntity.requestBody()
   })
 
   console.log(response);
