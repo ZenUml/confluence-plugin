@@ -7,5 +7,6 @@ describe('Macro only comment related functions', () => {
     const graphMacro = new Macro(mockApConfluence, 'graph');
     const graph = await graphMacro.load();
     expect(graph.graphXml).toBe(graphMacro.EXAMPLE_GRAPHXML);
+    expect(graphMacro.propertyKey('uuid_1')).toBe('zenuml-graph-macro-uuid_1-body');
   })
 })
