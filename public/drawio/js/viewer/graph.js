@@ -46,36 +46,38 @@ async function showComment() {
   const urlParams = new URLSearchParams(window.location.search);
   const pageId = urlParams.get('pageId');
 
-    let commentRequestBody = {
-      "type": "comment",
-      "space": {
-        "key": "ZEN"
-      },
-      "body": {
-        "storage": {
-          "representation": "storage",
-          "value": comment
-        }
-      },
-      "title": "Test comment",
-      "container": {
-        "id": pageId,
-        "type" : "global"
+  let commentRequestBody = {
+    'type': 'comment',
+    'space': {
+      'key': 'ZEN'
+    },
+    'body': {
+      'storage': {
+        'representation': 'storage',
+        'value': comment
       }
+    },
+    'title': 'Test comment',
+    'container': {
+      'id': pageId,
+      'type': 'global'
     }
+  }
 
-    await AP.request('/rest/api/content', {
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(commentRequestBody)
-    })
+  const response = await AP.request('/rest/api/content', {
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(commentRequestBody)
+  })
 
-    if (subject) {
-        graph.removeCells([currentText]);
-        currentText = null;
-    } else {
-        currentText.value = '';
-    }
+  console.log(response);
+
+  if (subject) {
+    graph.removeCells([currentText])
+    currentText = null
+  } else {
+    currentText.value = ''
+  }
 }
 
 graph.addListener(mxEvent.CLICK, function (sender, evt) {
