@@ -33,12 +33,15 @@ function addComment(e) {
     deactivateCommentMode();
 }
 
-async function addOverlay(cellId, commentId) {
-  const commentResponse = await AP.request(`/rest/api/content/${commentId}?expand=extensions.inlineProperties,body.storage`)
-  console.log(commentResponse)
+async function loadCommentContent(commentId) {
+  const commentResourcePath = `/rest/api/content/${commentId}?expand=body.storage`
+  const commentResponse = await AP.request(commentResourcePath)
   const responseBody = JSON.parse(commentResponse.body)
-  console.log('response body', responseBody)
-  const localCommentContent = responseBody.body.storage.value;
+  return responseBody.body.storage.value
+}
+
+async function addOverlay(cellId, commentId) {
+  const localCommentContent = await loadCommentContent(commentId)
   overlay = new mxCellOverlay(img, localCommentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
   overlay.defaultOverlap = 0.7
   graph.addCellOverlay(graph.model.getCell(cellId), overlay)
