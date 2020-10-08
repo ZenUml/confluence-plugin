@@ -10,20 +10,20 @@ class Comment {
 
   requestBody() {
     return `{
-    'type': 'comment',
-    'space': {
-      'key': '${this._space}'
+    "type": "comment",
+    "space": {
+      "key": "${this._space}"
     },
-    'body': {
-      'storage': {
-        'representation': 'storage',
-        'value': '${this._commentContent}'
+    "body": {
+      "storage": {
+        "representation": "storage",
+        "value": "${this._commentContent}"
       }
     },
-    'title': 'Test comment',
-    'container': {
-      'id': '${this._pageId}',
-      'type': 'global'
+    "title": "Test comment",
+    "container": {
+      "id": "${this._pageId}",
+      "type": "global"
     }
   }`
   }

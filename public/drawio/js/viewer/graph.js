@@ -33,31 +33,36 @@ function addComment(e) {
     deactivateCommentMode();
 }
 
-function addOverlay(cellId, commentContent) {
-  overlay = new mxCellOverlay(img, commentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
+async function addOverlay(cellId, commentId) {
+  const commentResponse = await AP.request(`/rest/api/content/${commentId}?expand=extensions.inlineProperties,body.storage`)
+  console.log(commentResponse)
+  const responseBody = JSON.parse(commentResponse.body)
+  console.log('response body', responseBody)
+  const localCommentContent = responseBody.body.storage.value;
+  overlay = new mxCellOverlay(img, localCommentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
   overlay.defaultOverlap = 0.7
   graph.addCellOverlay(graph.model.getCell(cellId), overlay)
   overlay.addListener(mxEvent.CLICK, function (sender, evt) {
     console.log(evt)
-    showModal(commentContent)
+    showModal(localCommentContent)
   })
 }
 
 async function showComment() {
   const comment = currentText.value;
-  addOverlay(subject.getId(), comment)
-
   const urlParams = new URLSearchParams(window.location.search);
-  const pageId = urlParams.get('pageId');
 
+  const pageId = urlParams.get('pageId');
   const commentEntity = new Comment('ZEN', pageId, comment)
+
   const response = await AP.request('/rest/api/content', {
     type: 'POST',
     contentType: 'application/json',
     data: commentEntity.requestBody()
   })
+  console.log('showComment', response);
 
-  console.log(response);
+  addOverlay(subject.getId(), JSON.parse(response.body).id)
 
   if (subject) {
     graph.removeCells([currentText])
@@ -92,7 +97,7 @@ function setGraphXml(data) {
   var codec = new mxCodec(xmlDoc);
   codec.decode(xmlDoc.documentElement, graph.getModel());
 
-  addOverlay(2, '1154')
+  addOverlay(2, '563707905')
   // addOverlay(3, '1154')
 };
 
