@@ -33,15 +33,19 @@ function addComment(e) {
     deactivateCommentMode();
 }
 
+function addOverlay(cellId, commentContent) {
+  overlay = new mxCellOverlay(img, commentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
+  overlay.defaultOverlap = 0.7
+  graph.addCellOverlay(graph.model.getCell(cellId), overlay)
+  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
+    console.log(evt)
+    showModal(commentContent)
+  })
+}
+
 async function showComment() {
-    const comment = currentText.value;
-    overlay = new mxCellOverlay(img, comment, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
-    overlay.defaultOverlap = 0.7;
-    graph.addCellOverlay(subject || currentText, overlay);
-    overlay.addListener(mxEvent.CLICK, function (sender, evt) {
-        console.log(evt);
-        showModal(comment);
-    });
+  const comment = currentText.value;
+  addOverlay(subject.getId(), comment)
 
   const urlParams = new URLSearchParams(window.location.search);
   const pageId = urlParams.get('pageId');
@@ -82,15 +86,6 @@ function setGraphStyle(styleUrl) {
     dec.decode(root, graph.stylesheet);
 };
 
-function addOverlay(cellId, commentContent) {
-  overlay = new mxCellOverlay(img, commentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
-  overlay.defaultOverlap = 0.7
-  graph.addCellOverlay(graph.model.getCell(cellId), overlay)
-  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
-    console.log(evt)
-    showModal(commentContent)
-  })
-}
 
 function setGraphXml(data) {
   var xmlDoc = mxUtils.parseXml(data);
@@ -98,7 +93,7 @@ function setGraphXml(data) {
   codec.decode(xmlDoc.documentElement, graph.getModel());
 
   addOverlay(2, '1154')
-  addOverlay(3, '1154')
+  // addOverlay(3, '1154')
 };
 
 const graphNode = document.getElementById('graph');
