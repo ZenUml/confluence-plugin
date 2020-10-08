@@ -83,9 +83,26 @@ function setGraphStyle(styleUrl) {
 };
 
 function setGraphXml(data) {
-    var xmlDoc = mxUtils.parseXml(data);
-    var codec = new mxCodec(xmlDoc);
-    codec.decode(xmlDoc.documentElement, graph.getModel());
+  var xmlDoc = mxUtils.parseXml(data);
+  var codec = new mxCodec(xmlDoc);
+  codec.decode(xmlDoc.documentElement, graph.getModel());
+
+  overlay = new mxCellOverlay(img, '1114', mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
+  overlay.defaultOverlap = 0.7;
+  graph.addCellOverlay(graph.model.getCell(2), overlay);
+  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
+    console.log(evt);
+    showModal('1114');
+  });
+
+  overlay = new mxCellOverlay(img, '1115', mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
+  overlay.defaultOverlap = 0.7;
+  graph.addCellOverlay(graph.model.getCell(3), overlay);
+  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
+    console.log(evt);
+    showModal('1115');
+  });
+
 };
 
 const graphNode = document.getElementById('graph');
