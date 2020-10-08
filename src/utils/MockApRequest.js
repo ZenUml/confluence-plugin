@@ -1,5 +1,7 @@
 const request = () => {
-  return 'something'
+  return {
+    body: `{"body": { "storage": { "value": "something else" }}}`
+  }
 }
 
 const AP = {

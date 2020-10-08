@@ -8,7 +8,12 @@ class RemoteComment {
   }
 
   async load() {
-    return await this._AP.request()
+    const commentResourcePath = `/rest/api/content/${this._id}?expand=body.storage`
+    const commentResponse = await this._AP.request(commentResourcePath)
+    console.log(commentResponse)
+    const responseBody = JSON.parse(commentResponse.body)
+    console.log(responseBody)
+    return responseBody.body.storage.value
   }
 }
 
