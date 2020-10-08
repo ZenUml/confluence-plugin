@@ -82,27 +82,23 @@ function setGraphStyle(styleUrl) {
     dec.decode(root, graph.stylesheet);
 };
 
+function addOverlay(cellId, commentContent) {
+  overlay = new mxCellOverlay(img, commentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
+  overlay.defaultOverlap = 0.7
+  graph.addCellOverlay(graph.model.getCell(cellId), overlay)
+  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
+    console.log(evt)
+    showModal(commentContent)
+  })
+}
+
 function setGraphXml(data) {
   var xmlDoc = mxUtils.parseXml(data);
   var codec = new mxCodec(xmlDoc);
   codec.decode(xmlDoc.documentElement, graph.getModel());
 
-  overlay = new mxCellOverlay(img, '1114', mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
-  overlay.defaultOverlap = 0.7;
-  graph.addCellOverlay(graph.model.getCell(2), overlay);
-  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
-    console.log(evt);
-    showModal('1114');
-  });
-
-  overlay = new mxCellOverlay(img, '1115', mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP);
-  overlay.defaultOverlap = 0.7;
-  graph.addCellOverlay(graph.model.getCell(3), overlay);
-  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
-    console.log(evt);
-    showModal('1115');
-  });
-
+  addOverlay(2, '1154')
+  addOverlay(3, '1154')
 };
 
 const graphNode = document.getElementById('graph');
