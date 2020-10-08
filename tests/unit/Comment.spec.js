@@ -8,20 +8,20 @@ describe('Comment', () => {
     expect(comment._pageId).toBe('pageId-12345')
     expect(comment._commentContent).toBe('Comment content')
     expect(comment.requestBody()).toBe(`{
-    'type': 'comment',
-    'space': {
-      'key': 'ZEN'
+    "type": "comment",
+    "space": {
+      "key": "ZEN"
     },
-    'body': {
-      'storage': {
-        'representation': 'storage',
-        'value': 'Comment content'
+    "body": {
+      "storage": {
+        "representation": "storage",
+        "value": "Comment content"
       }
     },
-    'title': 'Test comment',
-    'container': {
-      'id': 'pageId-12345',
-      'type': 'global'
+    "title": "Test comment",
+    "container": {
+      "id": "pageId-12345",
+      "type": "global"
     }
   }`)
   })
