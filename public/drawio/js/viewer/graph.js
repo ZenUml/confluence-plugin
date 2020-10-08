@@ -33,15 +33,9 @@ function addComment(e) {
     deactivateCommentMode();
 }
 
-async function loadCommentContent(commentId) {
-  const commentResourcePath = `/rest/api/content/${commentId}?expand=body.storage`
-  const commentResponse = await AP.request(commentResourcePath)
-  const responseBody = JSON.parse(commentResponse.body)
-  return responseBody.body.storage.value
-}
-
 async function addOverlay(cellId, commentId) {
-  const localCommentContent = await loadCommentContent(commentId)
+  const remoteComment = new RemoteComment(commentId, AP);
+  const localCommentContent = await remoteComment.load()
   overlay = new mxCellOverlay(img, localCommentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
   overlay.defaultOverlap = 0.7
   graph.addCellOverlay(graph.model.getCell(cellId), overlay)

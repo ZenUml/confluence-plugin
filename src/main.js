@@ -10,6 +10,7 @@ console.log(Version)
 import MockApConfluence from './utils/MockApConfluence'
 import Macro from './utils/Macro'
 import Comment from './utils/Comment'
+import RemoteComment from './utils/RemoteComment'
 import Editor from './components/Editor'
 import Workspace from './components/Workspace'
 import mermaid from 'mermaid'
@@ -116,6 +117,7 @@ if (window.location.href.includes('localhost')) {
 
 window.Macro = Macro
 window.Comment = Comment
+window.RemoteComment = RemoteComment
 if(window.onAppLoaded) {
   window.onAppLoaded();
 }
