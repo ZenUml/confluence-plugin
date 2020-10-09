@@ -23,6 +23,9 @@ OrderController.create(payload) {
   _versionNumber;
   _loaded = false;
   _macroIdentifier;
+  _code;
+  _graphXml;
+  _comments = [];
 
   // eslint-disable-next-line
   constructor(confluence = AP.confluence, macroIdentifier = 'sequence') {
@@ -119,6 +122,7 @@ OrderController.create(payload) {
       code = contentProp?.value
     } else {
       code = contentProp?.value?.code
+      this._comments = contentProp?.value?.comments || []
       styles = contentProp?.value?.styles
       mermaidCode = contentProp?.value?.mermaidCode
       diagramType = contentProp?.value?.diagramType
@@ -135,9 +139,28 @@ OrderController.create(payload) {
     }
 
     styles = styles || {}
-    return {code, styles, mermaidCode, diagramType, graphXml};
+    this._graphXml = graphXml
+    return {code, styles, mermaidCode, diagramType, graphXml, comments: this._comments };
   }
 
+  // comments: [{ cellId: "a", commentId: "c1" }, { cellId: "b", commentId: "b1" }]
+
+  async comment(cellId, commentId) {
+    const key = this._key
+    const versionNumber = this._versionNumber;
+    this._comments.push({cellId: cellId, commentId: commentId})
+    const contentProperty = {
+      key: this.propertyKey(key),
+      value: {
+        graphXml: this._graphXml,
+        comments: this._comments
+      },
+      version: {
+        number: versionNumber ? versionNumber + 1 : 1
+      }
+    }
+    await this.setContentProperty(contentProperty)
+  }
   // Warning! Do not call getXXX in save. Do retest if you want to call getXXX.
   // It does not work as of 17th May 2020. That is why we have stored key and version
   async save(code, styles, mermaidCode, diagramType) {
@@ -148,7 +171,7 @@ OrderController.create(payload) {
     this._confluence.saveMacro({uuid: key, updatedAt: new Date()}, code);
     const versionNumber = this._versionNumber;
 
-    const value = this._macroIdentifier === 'graph' ? {graphXml: code} : {code, styles, mermaidCode, diagramType};
+    const value = this._macroIdentifier === 'graph' ? {graphXml: code, comments: this._comments} : {code, styles, mermaidCode, diagramType};
 
     const contentProperty = {
       key: this.propertyKey(key),

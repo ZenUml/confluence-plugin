@@ -59,7 +59,10 @@ async function showComment() {
   })
   console.log('showComment', response);
 
-  addOverlay(subject.getId(), JSON.parse(response.body).id)
+  const commentId = JSON.parse(response.body).id
+  const cellId = subject.getId()
+  window.macro.comment(cellId, commentId)
+  addOverlay(cellId, commentId)
 
   if (subject) {
     graph.removeCells([currentText])
@@ -93,10 +96,15 @@ function setGraphXml(data) {
   var xmlDoc = mxUtils.parseXml(data);
   var codec = new mxCodec(xmlDoc);
   codec.decode(xmlDoc.documentElement, graph.getModel());
-
-  addOverlay(2, '563707905')
+  // addOverlay(2, '563707905')
   // addOverlay(3, '1154')
 };
+
+function setComments(comments) {
+  comments.forEach((comment) => {
+    addOverlay(comment.cellId, comment.commentId)
+  })
+}
 
 const graphNode = document.getElementById('graph');
 const commentBtn = document.getElementById("commentBtn");

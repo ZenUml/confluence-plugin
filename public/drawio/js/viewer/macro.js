@@ -1,11 +1,12 @@
 
 async function initializeMacro() {
-    const macro = new Macro(AP.confluence, 'graph');
-    const { graphXml } = await macro.load();
+    window.macro = new Macro(AP.confluence, 'graph');
+    const { graphXml, comments } = await macro.load();
 
     if (graphXml) {
         setGraphStyle('styles/default.xml');
         setGraphXml(graphXml);
+        setComments(comments || [])
     }
 
     setTimeout(function () {

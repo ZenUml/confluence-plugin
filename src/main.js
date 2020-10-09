@@ -23,6 +23,11 @@ import 'codemirror/lib/codemirror.css'
 // theme css
 import 'codemirror/theme/base16-dark.css'
 
+// eslint-disable-next-line
+import React from 'react'
+import ReactDOM from 'react-dom'
+import CommentComponent from './components/CommentComponent'
+
 Vue.use(Va, 'en')
 
 // eslint-disable-next-line
@@ -100,13 +105,13 @@ const ExtendedStore = {
 
 const store = new Vuex.Store(ExtendedStore);
 
-new Vue({
-  store,
-  render: h => h(Workspace) // with this method, we don't need to use full version of vew
-}).$mount('#app')
+// new Vue({
+//   store,
+//   render: h => h(Workspace) // with this method, we don't need to use full version of vew
+// }).$mount('#app')
 window.store = store
 
-if (window.location.href.includes('localhost')) {
+if (!window.AP) {
   // eslint-disable-next-line
   console.log('You are using a mocked AP.confluence')
   window.AP = {
@@ -121,3 +126,6 @@ window.RemoteComment = RemoteComment
 if(window.onAppLoaded) {
   window.onAppLoaded();
 }
+// eslint-disable-next-line
+console.log(CommentComponent)
+ReactDOM.render(React.createElement(CommentComponent), document.getElementById("comment"))
