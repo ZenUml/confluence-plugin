@@ -5,22 +5,22 @@ function getUrlParam (param) {
 
 //https://gist.github.com/hagenburger/500716
 var JavaScript = {
-  load: function(src, callback) {
-	  var loaded;
-	  var script = document.createElement('script');
-	  script.setAttribute('src', src);
+  load: function (src, callback) {
+    let loaded
+    let script = document.createElement('script')
+    script.setAttribute('src', src)
 
-	  if (callback) {
-	    script.onreadystatechange = script.onload = function() {
-	      if (!loaded) {
-		callback();
-	      }
-	      loaded = true;
-	    };
-	  }
-	  document.getElementsByTagName('head')[0].appendChild(script);
-	  return script;
-	}
+    if (callback) {
+      script.onreadystatechange = script.onload = function () {
+        if (!loaded) {
+          callback()
+        }
+        loaded = true
+      }
+    }
+    document.getElementsByTagName('head')[0].appendChild(script)
+    return script
+  }
 };
 
 function getConnectUrl() {
