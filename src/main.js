@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { VuePlugin } from 'vuera'
 import VueCodeMirror from 'vue-codemirror'
 
 import { Version, SeqDiagram, Store } from 'vue-sequence'
@@ -25,10 +26,11 @@ import 'codemirror/theme/base16-dark.css'
 
 // eslint-disable-next-line
 import React from 'react'
-import ReactDOM from 'react-dom'
+// import ReactDOM from 'react-dom'
 import CommentComponent from './components/CommentComponent'
 
 Vue.use(Va, 'en')
+Vue.use(VuePlugin)
 
 // eslint-disable-next-line
 window.mermaid = mermaid
@@ -128,4 +130,8 @@ if(window.onAppLoaded) {
 }
 // eslint-disable-next-line
 console.log(CommentComponent)
-ReactDOM.render(React.createElement(CommentComponent), document.getElementById("comment"))
+new Vue({
+  store,
+  render: h => h(CommentComponent)
+}).$mount('#comment')
+// ReactDOM.render(React.createElement(CommentComponent), document.getElementById("comment"))
