@@ -40,8 +40,6 @@ async function addOverlay(cellId, commentId) {
   overlay.defaultOverlap = 0.7
   graph.addCellOverlay(graph.model.getCell(cellId), overlay)
   overlay.addListener(mxEvent.CLICK, function (sender, evt) {
-    console.log(evt)
-    // showModal(localCommentContent)
     store.state.commentContent = localCommentContent
   })
 }
