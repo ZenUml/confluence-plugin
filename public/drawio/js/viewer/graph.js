@@ -41,7 +41,8 @@ async function addOverlay(cellId, commentId) {
   graph.addCellOverlay(graph.model.getCell(cellId), overlay)
   overlay.addListener(mxEvent.CLICK, function (sender, evt) {
     console.log(evt)
-    showModal(localCommentContent)
+    // showModal(localCommentContent)
+    store.state.commentContent = localCommentContent
   })
 }
 
