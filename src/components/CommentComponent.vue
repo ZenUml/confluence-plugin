@@ -5,11 +5,11 @@
 <script>
   import React from 'react'
   import Comment, { CommentAction, CommentAuthor, CommentEdited, CommentTime } from '@atlaskit/comment'
+  import { mapGetters } from 'vuex'
   const e = React.createElement
   export default {
     data() {
       return {
-        content: e('p', null, '<div>c</div>'),
         time: e(CommentTime, null, '30 August, 2020'),
         author: e(CommentAuthor, null, 'John Smith'),
         type: 'author',
@@ -18,6 +18,15 @@
           e(CommentAction, null, 'Reply')
         ]
       }
+    },
+    computed: {
+      ...mapGetters(['commentContent']),
+      content: function () {
+        return e('p', null, this.commentContent)
+      },
+    },
+    methods: {
+
     },
     components: {
       Comment,

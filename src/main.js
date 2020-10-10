@@ -60,6 +60,9 @@ const ExtendedStore = {
     },
     updateDiagramType(state, payload) {
       state.diagramType = payload
+    },
+    updateCurrentCommentId(state, payload) {
+      state.currentCommentId = payload
     }
   },
   actions: {
@@ -85,6 +88,9 @@ const ExtendedStore = {
       const code = state.code
       commit('code', '')
       commit('code', code)
+    },
+    selectComment({commit}, payload) {
+      commit('updateCurrentCommentId', payload)
     }
   },
   getters: {
@@ -94,6 +100,9 @@ const ExtendedStore = {
     },
     diagramType: (state) => {
       return state.diagramType?.toLowerCase() || 'zenuml'
+    },
+    commentContent: (state) => {
+      return state.commentContent
     }
   },
   state: {
@@ -101,16 +110,18 @@ const ExtendedStore = {
     mermaidCode: 'graph TD; A-->B;',
     mermaidSvg: '',
     diagramType: 'zenuml',
-    styles: {}
+    styles: {},
+    currentCommentId: '',
+    commentContent: ''
   }
 }
 
 const store = new Vuex.Store(ExtendedStore);
 
-// new Vue({
-//   store,
-//   render: h => h(Workspace) // with this method, we don't need to use full version of vew
-// }).$mount('#app')
+new Vue({
+  store,
+  render: h => h(Workspace) // with this method, we don't need to use full version of vew
+}).$mount('#app')
 window.store = store
 
 if (!window.AP) {
@@ -130,6 +141,8 @@ if(window.onAppLoaded) {
 }
 // eslint-disable-next-line
 console.log(CommentComponent)
+store.state.commentContent = 'content from store'
+
 new Vue({
   store,
   render: h => h(CommentComponent)
