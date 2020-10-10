@@ -1,7 +1,7 @@
 function getUrlParam (param) {
   var codedParam = (new RegExp(param + '=([^&]*)')).exec(window.location.search)[1];
   return decodeURIComponent(codedParam);
-};
+}
 
 //https://gist.github.com/hagenburger/500716
 var JavaScript = {
