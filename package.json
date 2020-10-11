@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@atlaskit/comment": "^10.0.4",
+    "@atlaskit/textarea": "^3.0.4",
     "firebase-functions": "^3.7.0",
     "mermaid": "^8.5.2",
     "react": "^16.13.1",

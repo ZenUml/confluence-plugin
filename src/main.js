@@ -28,6 +28,7 @@ import 'codemirror/theme/base16-dark.css'
 import React from 'react'
 // import ReactDOM from 'react-dom'
 import CommentComponent from './components/CommentComponent'
+import CommentEditor from './components/CommentEditor'
 
 Vue.use(Va, 'en')
 Vue.use(VuePlugin)
@@ -103,6 +104,9 @@ const ExtendedStore = {
     },
     commentContent: (state) => {
       return state.commentContent
+    },
+    isEditing: (state) => {
+      return state.editing
     }
   },
   state: {
@@ -112,7 +116,8 @@ const ExtendedStore = {
     diagramType: 'zenuml',
     styles: {},
     currentCommentId: '',
-    commentContent: ''
+    commentContent: '',
+    editing: false
   }
 }
 
@@ -150,4 +155,13 @@ if (document.getElementById('comment')) {
     render: h => h(CommentComponent)
   }).$mount('#comment')
 }
+
+if (document.getElementById('comment-editor')) {
+  new Vue({
+    store,
+    render: h => h(CommentEditor)
+  }).$mount('#comment-editor')
+}
+
+
 // ReactDOM.render(React.createElement(CommentComponent), document.getElementById("comment"))

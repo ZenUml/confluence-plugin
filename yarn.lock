@@ -69,6 +69,15 @@
     "@emotion/core" "^10.0.9"
     tslib "^2.0.0"
 
+"@atlaskit/textarea@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@atlaskit/textarea/-/textarea-3.0.4.tgz#83c0aadd1d51e0cb81b47ef54215f91a519f2d68"
+  integrity sha512-UPEmXIhBOVtkhcMC75QIGobfvPXsfcP9hD0EN9rLLQog2/Sf70TE1K2gbTMKGDh9IOpkax8ukOSUs9QniRODkw==
+  dependencies:
+    "@atlaskit/analytics-next" "^8.0.0"
+    "@atlaskit/theme" "^11.0.0"
+    tslib "^2.0.0"
+
 "@atlaskit/theme@^11.0.0":
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/@atlaskit/theme/-/theme-11.0.0.tgz#d7547be1ddd6d526137235c0fcd328895bad3637"
