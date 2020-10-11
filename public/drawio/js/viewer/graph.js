@@ -35,12 +35,11 @@ function addComment(e) {
     if (!isCommentModeActive()) {
         return;
     }
-
-    var pt = graph.getPointForEvent(e);
-    var parent = graph.getDefaultParent();
-    var cell = graph.insertVertex(parent, null, '', pt.x, pt.y, 100, 30, 'text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;');
-
-    graph.startEditingAtCell(cell);
+    store.state.editing = true;
+    setTimeout(function () {
+      document.getElementsByTagName('textarea')[0].focus()
+    }, 0)
+    // graph.startEditingAtCell(cell);
     currentText = cell;
     deactivateCommentMode();
 }

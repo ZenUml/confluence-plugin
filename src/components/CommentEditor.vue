@@ -1,6 +1,6 @@
 <template>
   <div v-show="isEditing">
-    <TextArea resize="auto" name="area" isInvalid isCompact />
+    <TextArea ref="textareaEl" resize="auto" name="area" isInvalid isCompact />
   </div>
 </template>
 
@@ -13,6 +13,16 @@
   export default {
     computed: {
       ...mapGetters(['isEditing'])
+    },
+    methods: {
+      onRef: function () {
+        // eslint-disable-next-line
+        console.log(arguments)
+      }
+    },
+    mounted: function() {
+      // eslint-disable-next-line
+      console.log(this.$refs)
     },
     components: {
       TextArea
