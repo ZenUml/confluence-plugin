@@ -143,7 +143,7 @@ OrderController.create(payload) {
     return {code, styles, mermaidCode, diagramType, graphXml, comments: this._comments };
   }
 
-  // comments: [{ cellId: "a", commentId: "c1" }, { cellId: "b", commentId: "b1" }]
+  // comments: [{ cellId: "1", commentId: "c1" }, { cellId: "2", commentId: "b1" }]
 
   async comment(cellId, commentId) {
     const key = this._key

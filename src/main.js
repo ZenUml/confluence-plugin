@@ -117,11 +117,12 @@ const ExtendedStore = {
 }
 
 const store = new Vuex.Store(ExtendedStore);
-
-new Vue({
-  store,
-  render: h => h(Workspace) // with this method, we don't need to use full version of vew
-}).$mount('#app')
+if (document.getElementById('app')) {
+  new Vue({
+    store,
+    render: h => h(Workspace) // with this method, we don't need to use full version of vew
+  }).$mount('#app')
+}
 window.store = store
 
 if (!window.AP) {
@@ -143,8 +144,10 @@ if(window.onAppLoaded) {
 console.log(CommentComponent)
 store.state.commentContent = 'content from store'
 
-new Vue({
-  store,
-  render: h => h(CommentComponent)
-}).$mount('#comment')
+if (document.getElementById('comment')) {
+  new Vue({
+    store,
+    render: h => h(CommentComponent)
+  }).$mount('#comment')
+}
 // ReactDOM.render(React.createElement(CommentComponent), document.getElementById("comment"))

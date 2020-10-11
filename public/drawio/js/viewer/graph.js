@@ -13,6 +13,18 @@ graph.setConnectable(false);
 var img = new mxImage('/drawio/images/comment.svg', 20, 20);
 var currentText, overlay, subject;
 
+graph.addListener(mxEvent.CLICK, function (sender, evt) {
+  var e = evt.getProperty('event'); // mouse event
+  var cell = evt.getProperty('cell'); // cell may be null
+
+  if (cell != null) {
+    subject = cell;
+    addComment(evt.getProperty('event'));
+
+    evt.consume();
+  }
+});
+
 graph.addListener(mxEvent.EDITING_STOPPED, function (sender, evt) {
     if (currentText) {
         showComment();
@@ -70,18 +82,6 @@ async function showComment() {
     currentText.value = ''
   }
 }
-
-graph.addListener(mxEvent.CLICK, function (sender, evt) {
-    var e = evt.getProperty('event'); // mouse event
-    var cell = evt.getProperty('cell'); // cell may be null
-
-    if (cell != null) {
-        subject = cell;
-        addComment(evt.getProperty('event'));
-
-        evt.consume();
-    }
-});
 
 function setGraphStyle(styleUrl) {
     var req = mxUtils.load(styleUrl);
