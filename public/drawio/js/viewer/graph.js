@@ -11,7 +11,7 @@ graph.setSplitEnabled(false);
 graph.setConnectable(false);
 
 var img = new mxImage('/drawio/images/comment.svg', 20, 20);
-var currentText, overlay, subject;
+var currentText, subject;
 
 graph.addListener(mxEvent.EDITING_STOPPED, function (sender, evt) {
     if (currentText) {
@@ -33,37 +33,49 @@ function addComment(e) {
     deactivateCommentMode();
 }
 
-async function addOverlay(cellId, commentId) {
+async function addOverlayWithRemoteComment(cellId, commentId) {
   const remoteComment = new RemoteComment(commentId, AP);
   const localCommentContent = await remoteComment.load()
-  overlay = new mxCellOverlay(img, localCommentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
+  addOverlay(cellId, localCommentContent);
+}
+
+function addOverlay(cellId, commentText) {
+  const cell = graph.model.getCell(cellId);
+  if(!cell) {
+    return;
+  }
+
+  const overlay = new mxCellOverlay(img, commentText, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
   overlay.defaultOverlap = 0.7
-  graph.addCellOverlay(graph.model.getCell(cellId), overlay)
+  graph.addCellOverlay(cell, overlay)
   overlay.addListener(mxEvent.CLICK, function (sender, evt) {
-    console.log(evt)
-    // showModal(localCommentContent)
-    store.state.commentContent = localCommentContent
+    if(store) {
+      store.state.commentContent = commentText;
+    }
   })
 }
 
 async function showComment() {
   const comment = currentText.value;
+  const cellId = subject.getId();
+  addOverlay(cellId, comment);
+
   const urlParams = new URLSearchParams(window.location.search);
-
   const pageId = urlParams.get('pageId');
-  const commentEntity = new Comment('ZEN', pageId, comment)
 
-  const response = await AP.request('/rest/api/content', {
-    type: 'POST',
-    contentType: 'application/json',
-    data: commentEntity.requestBody()
-  })
-  console.log('showComment', response);
+  if(pageId) {
+    const commentEntity = new Comment('ZEN', pageId, comment)
 
-  const commentId = JSON.parse(response.body).id
-  const cellId = subject.getId()
-  window.macro.comment(cellId, commentId)
-  addOverlay(cellId, commentId)
+    const response = await AP.request('/rest/api/content', {
+      type: 'POST',
+      contentType: 'application/json',
+      data: commentEntity.requestBody()
+    })
+    console.log('create comment response:', response);
+
+    const commentId = JSON.parse(response.body).id;
+    window.macro.comment(cellId, commentId);
+  }
 
   if (subject) {
     graph.removeCells([currentText])
@@ -103,7 +115,7 @@ function setGraphXml(data) {
 
 function setComments(comments) {
   comments.forEach((comment) => {
-    addOverlay(comment.cellId, comment.commentId)
+    addOverlayWithRemoteComment(comment.cellId, comment.commentId)
   })
 }
 
