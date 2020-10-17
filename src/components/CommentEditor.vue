@@ -1,6 +1,7 @@
 <template>
   <div v-show="isEditing">
     <TextArea ref="textareaEl" resize="auto" name="area" isInvalid isCompact />
+    <Editor appearance="comment" />
   </div>
 </template>
 
@@ -8,6 +9,7 @@
   // import React from 'react'
   // import styled from 'styled-components'
   import TextArea from '@atlaskit/textarea'
+  import { Editor } from '@atlaskit/editor-core';
   import { mapGetters } from 'vuex'
 
   export default {
@@ -25,7 +27,8 @@
       console.log(this.$refs)
     },
     components: {
-      TextArea
+      TextArea,
+      Editor
     }
   }
 </script>

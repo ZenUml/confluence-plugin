@@ -9,7 +9,8 @@
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-114996686-1"></script>
 	<script type="text/javascript" src="../js/google-analytics.js"></script>
-
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 	<script type="text/javascript" src="../js/util.js"></script>
 
 	<script type="text/javascript" src="js/viewer/env.js"></script>
@@ -31,7 +32,9 @@
 	<script type="text/javascript" src="js/viewer/graph.js?v=27"></script>
 
 	<script type="text/javascript">
-    loadConnect(initializeMacro);
+    document.addEventListener("DOMContentLoaded", function() {
+      loadConnect(initializeMacro);
+    });
 	</script>
 
 </body>
