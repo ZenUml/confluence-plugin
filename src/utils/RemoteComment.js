@@ -4,14 +4,14 @@ class RemoteComment {
   constructor(id, AP) {
     this._id = id
     this._AP = AP
-
+    this.responseBody = {};
   }
 
   async load() {
-    const commentResourcePath = `/rest/api/content/${this._id}?expand=body.storage`
+    const commentResourcePath = `/rest/api/content/${this._id}?expand=body.storage,version`
     const commentResponse = await this._AP.request(commentResourcePath)
-    const responseBody = JSON.parse(commentResponse.body)
-    return responseBody.body.storage.value
+    this.responseBody = JSON.parse(commentResponse.body)
+    return this.responseBody.body.storage.value
   }
 }
 

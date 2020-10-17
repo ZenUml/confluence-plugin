@@ -1,3 +1,5 @@
+const TEXT_CELL_STYLE = 'text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;';
+
 var graph = new Graph(document.getElementById('graph'));
 graph.resizeContainer = false;
 graph.setEnabled(true);
@@ -11,7 +13,8 @@ graph.setSplitEnabled(false);
 graph.setConnectable(false);
 
 var img = new mxImage('/drawio/images/comment.svg', 20, 20);
-var currentText, overlay, subject;
+var currentText, subject;
+var remoteCommentCache = {};
 
 graph.addListener(mxEvent.CLICK, function (sender, evt) {
   var e = evt.getProperty('event'); // mouse event
@@ -19,11 +22,16 @@ graph.addListener(mxEvent.CLICK, function (sender, evt) {
 
   if (cell != null) {
     subject = cell;
-    addComment(evt.getProperty('event'));
+
+    const overlay = getOverlay(cell);
+    const comment = overlay && overlay.tooltip || '';
+
+    addComment(evt.getProperty('event'), comment);
 
     evt.consume();
   }
 });
+
 
 graph.addListener(mxEvent.EDITING_STOPPED, function (sender, evt) {
     if (currentText) {
@@ -31,7 +39,7 @@ graph.addListener(mxEvent.EDITING_STOPPED, function (sender, evt) {
     }
 });
 
-function addComment(e) {
+function addComment(e, existingComment) {
     if (!isCommentModeActive()) {
         return;
     }
@@ -40,46 +48,101 @@ function addComment(e) {
       document.getElementsByTagName('textarea')[0].focus()
     }, 0)
     // graph.startEditingAtCell(cell);
-    currentText = cell;
+    // currentText = cell;
     deactivateCommentMode();
 }
 
-async function addOverlay(cellId, commentId) {
+async function addOverlayWithRemoteComment(cellId, commentId) {
   const remoteComment = new RemoteComment(commentId, AP);
   const localCommentContent = await remoteComment.load()
-  overlay = new mxCellOverlay(img, localCommentContent, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
-  overlay.defaultOverlap = 0.7
-  graph.addCellOverlay(graph.model.getCell(cellId), overlay)
-  overlay.addListener(mxEvent.CLICK, function (sender, evt) {
-    store.state.commentContent = localCommentContent
-  })
+  addOrUpdateOverlay(cellId, localCommentContent);
+
+  remoteCommentCache[cellId] = remoteComment;
+}
+
+function addOrUpdateOverlay(cellId, commentText) {
+  const cell = graph.model.getCell(cellId);
+  if(!cell) {
+    return;
+  }
+
+  let overlay = getOverlay(cell);
+  if(overlay) {
+    overlay.tooltip = commentText;
+  } else {
+    overlay = new mxCellOverlay(img, commentText, mxConstants.ALIGN_LEFT, mxConstants.ALIGN_TOP)
+    overlay.defaultOverlap = 0.7;
+    graph.addCellOverlay(cell, overlay);
+    overlay.addListener(mxEvent.CLICK, function (sender, evt) {
+      if(store) {
+        store.state.commentContent = commentText;
+      }
+    });
+  }
 }
 
 async function showComment() {
   const comment = currentText.value;
-  const urlParams = new URLSearchParams(window.location.search);
+  const cellId = subject.getId();
+  addOrUpdateOverlay(cellId, comment);
 
+  const urlParams = new URLSearchParams(window.location.search);
   const pageId = urlParams.get('pageId');
-  const commentEntity = new Comment('ZEN', pageId, comment)
+
+  if(pageId) {
+    let commentId;
+    const remoteComment = remoteCommentCache[cellId];
+    if(remoteComment) {
+      commentId = await updateCommentContent(remoteComment, comment);
+    } else {
+      commentId = await createCommentContent(pageId, comment);
+    }
+
+    window.macro.comment(cellId, commentId);
+  }
+
+  if (subject) {
+    graph.removeCells([currentText]);
+    currentText = null;
+  } else {
+    currentText.value = '';
+  }
+}
+
+async function createCommentContent(pageId, comment) {
+  const commentEntity = new Comment('ZEN', pageId, comment);
 
   const response = await AP.request('/rest/api/content', {
     type: 'POST',
     contentType: 'application/json',
     data: commentEntity.requestBody()
   })
-  console.log('showComment', response);
+  console.log('create comment response:', response);
 
-  const commentId = JSON.parse(response.body).id
-  const cellId = subject.getId()
-  window.macro.comment(cellId, commentId)
-  addOverlay(cellId, commentId)
+  return JSON.parse(response.body).id;
+}
 
-  if (subject) {
-    graph.removeCells([currentText])
-    currentText = null
-  } else {
-    currentText.value = ''
+async function updateCommentContent(remoteComment, newCommentText) {
+  const commentId = remoteComment.responseBody.id;
+  remoteComment.responseBody.body.storage.value = newCommentText;
+
+  if(!remoteComment.responseBody.version) {
+    remoteComment.responseBody.version = {number: 1};
   }
+  remoteComment.responseBody.version.number = remoteComment.responseBody.version.number + 1;
+
+  const response = await AP.request(`/rest/api/content/${commentId}`, {
+    type: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(remoteComment.responseBody)
+  });
+  console.log('update comment response:', response);
+  return commentId;
+}
+
+function getOverlay(cell) {
+  const overlays = graph.getCellOverlays(cell);
+  return overlays && overlays[0];
 }
 
 function setGraphStyle(styleUrl) {
@@ -94,13 +157,11 @@ function setGraphXml(data) {
   var xmlDoc = mxUtils.parseXml(data);
   var codec = new mxCodec(xmlDoc);
   codec.decode(xmlDoc.documentElement, graph.getModel());
-  // addOverlay(2, '563707905')
-  // addOverlay(3, '1154')
 };
 
 function setComments(comments) {
   comments.forEach((comment) => {
-    addOverlay(comment.cellId, comment.commentId)
+    addOverlayWithRemoteComment(comment.cellId, comment.commentId)
   })
 }
 
