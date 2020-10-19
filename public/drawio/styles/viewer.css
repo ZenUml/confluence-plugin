@@ -36,5 +36,5 @@
 }
 
 .comment-active {
-  cursor: url('/drawio/images/comment.svg'), auto;
+  cursor: url('/drawio/images/comment.svg') 20 20, auto;
 }

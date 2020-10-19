@@ -174,7 +174,8 @@ function activateCommentMode() {
 }
 
 function isCommentModeActive() {
-    return graphNode.getAttribute('class').includes('comment-active');
+  const c = graphNode.getAttribute('class');
+  return c && c.includes('comment-active');
 }
 
 function deactivateCommentMode() {
