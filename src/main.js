@@ -26,9 +26,9 @@ import 'codemirror/theme/base16-dark.css'
 
 // eslint-disable-next-line
 import React from 'react'
-// import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom'
 import CommentComponent from './components/CommentComponent'
-import CommentEditor from './components/CommentEditor'
+import { CommentEditor } from 'zenuml-graph-commenter-react'
 
 Vue.use(Va, 'en')
 Vue.use(VuePlugin)
@@ -150,18 +150,16 @@ console.log(CommentComponent)
 store.state.commentContent = 'content from store'
 
 if (document.getElementById('comment')) {
-  new Vue({
-    store,
-    render: h => h(CommentComponent)
-  }).$mount('#comment')
+  ReactDOM.render(React.createElement(CommentEditor), document.getElementById("comment"))
+  // new Vue({
+  //   store,
+  //   render: h => h(CommentComponent)
+  // }).$mount('#comment')
 }
 
-if (document.getElementById('comment-editor')) {
-  new Vue({
-    store,
-    render: h => h(CommentEditor)
-  }).$mount('#comment-editor')
-}
-
-
-// ReactDOM.render(React.createElement(CommentComponent), document.getElementById("comment"))
+// if (document.getElementById('comment-editor')) {
+//   new Vue({
+//     store,
+//     render: h => h(CommentEditor)
+//   }).$mount('#comment-editor')
+// }
